@@ -3,8 +3,12 @@ import React from 'react';
 import { View, Text, Image } from 'react-native';
 
 import { AuthForm } from '@/components';
+import useStore from '@/states/store';
 
 const Auth = () => {
+  // States from store
+  const isMemeber = useStore(state=> state.isMember);
+  
   return (
     <View className={styles.wrapper}>
       <Stack.Screen options={{
@@ -18,10 +22,12 @@ const Auth = () => {
         <Text className={styles.logoTitle}> Travel Planner</Text>
       </View>
 
-      <View>
-        <Text className={styles.welcomeMain}>Welcome Back</Text>
-        <Text className={styles.welcomeSub}>You've been missed!</Text>
+      {isMemeber? (
+        <View>
+          <Text className={styles.welcomeSub}>Sign in</Text>
       </View>
+      ):(<Text className={styles.welcomeSub}>Register</Text>)
+      }
 
       <View>
           <AuthForm />
@@ -37,6 +43,5 @@ const styles = {
   logoWrapper:  'flex-row justify-center items-end gap-2 mb-10',
   logo: 'w-10 h-10 ',
   logoTitle: 'font-outfit-bold text-2xl',
-  welcomeMain: 'text-4xl font-outfit-bold text-zinc-400',
-  welcomeSub: 'text-2xl font-outfit-medium text-zinc-400 mt-2 mb-10',
+  welcomeSub: 'text-2xl font-outfit-medium text-zinc-400 mt-2 mb-10 text-center',
 }

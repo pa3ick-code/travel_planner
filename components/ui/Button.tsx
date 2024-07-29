@@ -7,10 +7,11 @@ type ButtonProps = {
     handlePress?: ()=>void,
     color?: 'dark' | 'light' | 'blue',
     classname?: string,
-    icon?: any
+    icon?: any,
+    disable?: boolean
 }
 
-const Button = ({title, icon, handlePress, color, classname}: ButtonProps) => {
+const Button = ({title, icon, handlePress, color, classname, disable}: ButtonProps) => {
   return (
     <TouchableOpacity 
       className={`
@@ -23,6 +24,7 @@ const Button = ({title, icon, handlePress, color, classname}: ButtonProps) => {
           ${icon && styles.btn}
       `} 
       onPress={handlePress}
+      disabled={disable}
     >
 
         <Text 

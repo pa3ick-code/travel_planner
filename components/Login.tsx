@@ -33,7 +33,7 @@ export default Login;
 // Styles
 const styles = {
     image: 'w-full h-[540px] object-cover',
-    textContainer: 'rounded-t-3xl -mt-20 bg-white py-10 px-5 h-full',
+    textContainer: 'rounded-t-3xl -mt-10 bg-white py-10 px-5 h-full',
     title: 'font-outfit-xbold text-3xl text-center mt-10',
     desc: 'font-outfit text-center mb-14 mt-2 text-sm text-zinc-500 text-sm',
 }
