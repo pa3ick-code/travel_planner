@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 import React from 'react';
-import { View, Text, Image } from 'react-native';
+import { ScrollView, View, Text, Image } from 'react-native';
 
 import { AuthForm } from '@/components';
 import useStore from '@/states/store';
@@ -29,9 +29,9 @@ const Auth = () => {
       ):(<Text className={styles.welcomeSub}>Register</Text>)
       }
 
-      <View>
+      <ScrollView showsVerticalScrollIndicator={false}>
           <AuthForm />
-      </View>
+      </ScrollView>
     </View>
   );
 }

@@ -1,10 +1,11 @@
-import { ScrollView, Text, TextInput, ToastAndroid, View } from 'react-native';
+import { Text, TextInput,  View } from 'react-native';
 import { AntDesign } from '@expo/vector-icons';
-import { SubmitHandler, Controller, useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import Button from './ui/Button';
 import useStore from '@/states/store';
-import { FormField } from '@/schema/authFormSchema';
+import { FormField, FormSchema } from '@/schema/authFormSchema';
 import { createAccount, SignInAuth } from '@/config/firebaseAuth';
 
 const AuthForm = () => {
@@ -15,39 +16,32 @@ const AuthForm = () => {
   //Form Schema
   const {
     control, 
-    handleSubmit, 
+    handleSubmit,
+    setError, 
     formState:{errors, isSubmitting}
   } = useForm<FormField>({
-    defaultValues: {
-      email: "",
-      password: "",
-      fullname: "",
-      phone: "",
-    }
+    resolver: zodResolver(FormSchema)
   });
 
   //handlers
   const handleReg = ()=>{updateIsMember(!isMember)}
 
-  const showError = (message: any)=>{ 
-    return ToastAndroid.showWithGravity(message, ToastAndroid.SHORT, ToastAndroid.TOP);
-  }
+  const onSubmit:  SubmitHandler<FormField> = (data)=>{
+    console.log(JSON.stringify(data));
+    // const {email, password, fullname, phone} = data;
+    // if(!isMember){ 
+    //   await createAccount(email, password); 
+    //   return;
+    // }
 
-  const onSubmit:  SubmitHandler<FormField> = async(data)=>{
-    const {email, password, fullname, phone} = data;
-    if(!isMember){ 
-      await createAccount(email, password); 
-      return;
-    }
-
-    if(isMember){
-      await SignInAuth(email, password); 
-      return;
-    }
+    // if(isMember){
+    //   await SignInAuth(email, password); 
+    //   return;
+    // }
   }
   
   return (
-    <ScrollView showsVerticalScrollIndicator={false} className='gap-6'>
+    <View  className='gap-6 mb-5'>
 
         {!isMember && (
           <View>
@@ -67,6 +61,7 @@ const AuthForm = () => {
                 />
             )}      
           />
+          {errors.fullname && (<Text className={styles.inputError}>{errors.fullname.message}</Text>)}
         </View>
         )}
 
@@ -89,6 +84,7 @@ const AuthForm = () => {
                 />
             )}      
           />
+          {errors.phone && (<Text className={styles.inputError}>{errors.phone.message}</Text>)}
         </View>
         )}
 
@@ -98,7 +94,7 @@ const AuthForm = () => {
             control={control}
             name='email'
             rules={{ required: true, }}
-            render={({field: {onChange, onBlur, value}})=>(
+            render={({field: { onChange, onBlur, value}})=>(
                 <TextInput 
                   placeholder='example@gmail.com'
                   className={styles.input}
@@ -107,8 +103,9 @@ const AuthForm = () => {
                   onChangeText={onChange}
                   value={value}
                 />
-            )}      
+            )}   
           />
+          {errors.email && (<Text className={styles.inputError}>{errors.email.message}</Text>)}
         </View>
 
         <View>
@@ -129,6 +126,7 @@ const AuthForm = () => {
                 />
             )}      
           />
+          {errors.password && (<Text className={styles.inputError}>{errors.password.message}</Text>)}
         </View>
 
         {/* Action buttons */}
@@ -137,6 +135,7 @@ const AuthForm = () => {
             title={isMember? 'Sign in': 'Register'} 
             classname='mb-5 mt-10'
             handlePress={handleSubmit(onSubmit)}
+            // disable={errors? true:false}
           />
           
           <Button 
@@ -154,7 +153,7 @@ const AuthForm = () => {
             className='underline font-outfit-semibold py-3' onPress={handleReg}>{isMember? ' Register ' : ' Sign in '}</Text>
         </Text>
 
-    </ScrollView>
+    </View>
   );
 }
 
@@ -163,4 +162,5 @@ export default AuthForm;
 const styles = {
   input: 'bg-zinc-100 p-3 rounded-xl text-zinc-700 font-outfit border-zinc-200 border' ,
   inputTitle: 'text-zinc-700 font-outfit text-sm mb-1',
+  inputError: 'text-red-500 text-xs mt-1'
 }
