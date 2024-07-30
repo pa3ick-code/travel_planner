@@ -28,10 +28,14 @@
     },
     "plugins": [
       "expo-router",
-      "expo-font"
+      "expo-font",
+      "expo-secure-store"
     ],
     "experiments": {
       "typedRoutes": true
     }
-  }
+  },
+
+   "assetBundlePatterns": ["**/*"],
+    "excludeFromBundle": ["./secure.env", "./sensitive-data.json"]
 }
