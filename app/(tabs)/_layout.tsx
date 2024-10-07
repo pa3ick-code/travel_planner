@@ -1,37 +1,43 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
+import React from "react";
+import { Tabs } from "expo-router";
+import { explore, plane, user } from "@/constants/icons";
 
-import { TabBarIcon } from '@/components/navigation/TabBarIcon';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+export default function TabLayout(){
+    return(
+        <Tabs
+            screenOptions={{
+                headerShown: false,
+                tabBarShowLabel: false,
+                tabBarActiveTintColor: "#3c3c3c",
+                tabBarStyle:{
+                    backgroundColor: "#f0f0f0",
+                    height: 70,
+                }
+            }}
+        >
+            <Tabs.Screen 
+                name="trips" 
+                options={{
+                    title: 'Trips',
+                    tabBarIcon: plane,
+                }}
+            />
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+            <Tabs.Screen 
+                name="explore" 
+                options={{
+                    title: 'Explore',
+                    tabBarIcon: explore,
+                }}
+            />
 
-  return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
-        headerShown: false,
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Home',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'home' : 'home-outline'} color={color} />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="explore"
-        options={{
-          title: 'Explore',
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon name={focused ? 'code-slash' : 'code-slash-outline'} color={color} />
-          ),
-        }}
-      />
-    </Tabs>
-  );
+            <Tabs.Screen 
+                name="user" 
+                options={{
+                    title: 'User',
+                    tabBarIcon: user,
+                }}
+            />
+        </Tabs>
+    )
 }
