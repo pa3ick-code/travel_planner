@@ -1,20 +1,28 @@
 
+import { ThemedText } from "@/components/Theme/ThemedText";
+import ThemedView from "@/components/Theme/ThemedView";
 import ButtonUi from "@/components/ui/ButtonUi";
-import { Text, View, Image } from "react-native";
+import {  View, Image } from "react-native";
 
 export default function Index() {
   return (
-    <View className="flex-1 bg-white">
+    <ThemedView>
       <Image source={ require('../assets/images/banner.jpg') } className="w-full h-2/3" />
 
-      <View className=" bg-white dark:bg-neutral-950 px-5 pt-17 -mt-20 h-1/3 rounded-tr-3xl rounded-tl-3xl justify-center items-center ">
-        <Text className="font-outfit-semibold text-2xl text-center pb-2">Plan. Book. Explore.</Text>
-        <Text className="text-center font-outfit-regular text-sm pb-7">
+      <View className=" bg-white px-5 pt-17 -mt-20 h-[43%] rounded-tr-3xl rounded-tl-3xl justify-center items-center" >
+        <ThemedText type="subtitle" layout="py-2">Plan. Book. Explore.</ThemedText>
+        <ThemedText layout="text-center pb-8 text-neutral-500">
           Discover new destinations, book flights and hotels, and organize your trips all in one place. Plan Your Dream Trip with Ease and Convenience Today.
-        </Text>
+        </ThemedText>
 
-        <ButtonUi title="Get Started" routeTo="/(tabs)/trips"/>
+        <ButtonUi 
+          title="Get Started" 
+          routeTo="/auth/sign-up" 
+          textStyle="font-outfit-medium text-base"
+          bgColor="bg-blue-500"
+          containerStyle="justify-center items-center"
+        />
       </View>
-    </View>
+    </ThemedView>
   );
 }
