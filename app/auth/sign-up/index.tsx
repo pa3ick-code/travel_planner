@@ -8,11 +8,12 @@ import { imageMap } from '@/constants/images';
 import { signUpAuth } from '@/config/authHandler';
 import { ButtonUi, ImageUI } from '@/components/ui';
 import { ParallelScroll, ThemedText, ThemedView } from '@/components/Theme';
+import { useRouter } from 'expo-router';
 
 
 export default function index() {
+  const router = useRouter();
   const {
-        register,
         control,
         handleSubmit,
         formState: { errors },
@@ -27,13 +28,16 @@ export default function index() {
     }
     });
 
-    const onSubmit = handleSubmit(({email, password, firstName, lastName}) => {
-      signUpAuth({
+    const onSubmit = handleSubmit(async ({email, password, firstName, lastName}) => {
+      const auth = await signUpAuth({
         email: email,
         password: password,
         firstName: firstName,
         lastName: lastName,
-      })
+      });
+      if (auth) { 
+        router.replace('/(tabs)/trips')
+      }
     });
 
   return (
@@ -64,7 +68,7 @@ export default function index() {
             title='Create account'
             containerStyle='mt-5'
             bgColor='bg-blue-500'
-            action={  onSubmit }
+            action={ onSubmit }
           />
 
           <ThemedText layout='text-center font-outfit-regular mt-4'>

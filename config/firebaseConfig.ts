@@ -1,28 +1,38 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth'
-// import { getAnalytics } from "firebase/analytics";
+import Constants from 'expo-constants';
+import { getApps, initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getAuth } from "firebase/auth";
-import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage'
+import { getAuth, initializeAuth, getReactNativePersistence } from "firebase/auth";
+import { onAuthStateChanged } from "firebase/auth";
+import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 
 const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY!,
-  authDomain: process.env.FIREBASE_AUTH_DOMAIN!,
-  projectId: process.env.FIREBASE_PRODUCTION_ID!,
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET!,
-  messagingSenderId: process.env.FIREBASE_MESSAGINGING_SENDER_ID!,
-  appId: process.env.FIREBASE_APP_ID!,
-  measurementId: process.env.FIREBASE_MEASURING_ID!
+  apiKey: Constants.expoConfig?.extra?.apiKey,
+  authDomain: Constants.expoConfig?.extra?.authDomain,
+  projectId: Constants.expoConfig?.extra?.projectId,
+  storageBucket: Constants.expoConfig?.extra?.storageBucket,
+  messagingSenderId: Constants.expoConfig?.extra?.messagingSenderId,
+  appId: Constants.expoConfig?.extra?.appId,
+  measurementId: Constants.expoConfig?.extra?.measurementId
 };
 
+let app;
+if(!getApps().length){
+  app = initializeApp(firebaseConfig);
+}else{
+  app = getApps()[0];
+}
 
 // Initialize Firebasprocess.env.
-const app = initializeApp(firebaseConfig);
-const auth2 = initializeAuth(app, {
+// const app = initializeApp(firebaseConfig,);
+export const auth = initializeAuth(app, {
   persistence: getReactNativePersistence(ReactNativeAsyncStorage)
-})
-export const auth = getAuth(app);
-// const analytics = getAnalytics(app);
-// Initialize Cloud Firestore and get a reference to the service
+});
 export const db = getFirestore(app);
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      console.log("User is signed] in:");
+    } else {
+      console.log("User is not signed in:");
+    }
+  });

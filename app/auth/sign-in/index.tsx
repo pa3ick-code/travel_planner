@@ -2,22 +2,35 @@ import { RHFInputs } from '@/components/FormField';
 import { ParallelScroll, ThemedText, ThemedView } from '@/components/Theme';
 import ButtonUi from '@/components/ui/ButtonUi';
 import ImageUI from '@/components/ui/ImageUI';
+import { signInAuth } from '@/config/authHandler';
 import { formSignIn } from '@/constants/forms';
 import { imageMap } from '@/constants/images';
 import { loginSchema, signInSchema } from '@/types/schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, SubmitHandler} from 'react-hook-form'
+import { useRouter } from 'expo-router';
+import { useForm } from 'react-hook-form'
 
 export default function index() {
+  const router = useRouter();
     const {
         control,
-        register,
         handleSubmit,
         formState: { errors },
     } = useForm<signInSchema>({
       mode: 'all',
       resolver: zodResolver(loginSchema),
     });
+
+    const onSubmit = handleSubmit(async({email, password}) => {
+      const auth = await signInAuth({
+              email: email,
+              password: password,
+            });
+
+      if (auth) { 
+        router.replace('/(tabs)/trips')
+      }
+    })
 
   return (
     <ParallelScroll type='container'>
@@ -45,6 +58,7 @@ export default function index() {
             title='Sign in'
             containerStyle='mt-5'
             bgColor='bg-blue-500'
+            action={ onSubmit }
           />
 
           <ThemedText layout='text-center font-outfit-regular mt-4'>
@@ -64,7 +78,7 @@ export default function index() {
             routeTo={'/'}
             title='Continue to Google'
             leftIcon={(<ImageUI source={imageMap.google} size='icon' otherStyles='absolute left-5'/>)}
-            containerStyle='flex-row relative border-2 border-neutral-300 '
+            containerStyle='flex-row relative border-2 border-neutral-300'
           />
         </ThemedView>
     </ParallelScroll>

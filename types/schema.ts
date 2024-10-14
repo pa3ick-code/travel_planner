@@ -11,6 +11,8 @@ const password = z.string().min(8).regex(pattern.password, 'Password must contai
 
 const confirmPassword = z.string().min(8, "Confirm password must be at least 8 characters long");
 
+const loginPassword = z.string();
+
 export const registerSchema = z.object({
     email: email,
     firstName: firstName,
@@ -24,7 +26,7 @@ export const registerSchema = z.object({
 
 export const loginSchema = z.object({
     email: email,
-    password: password
+    password: loginPassword
 })
 
 export type signInSchema = z.infer< typeof loginSchema>

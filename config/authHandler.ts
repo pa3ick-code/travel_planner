@@ -1,6 +1,7 @@
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, inMemoryPersistence, setPersistence } from "firebase/auth";
 import { collection, addDoc, setDoc, doc } from "firebase/firestore"; 
 import { auth, db } from "./firebaseConfig";
+
 
 type signInAuthProps = {
     email: string,
@@ -16,29 +17,28 @@ export const signUpAuth = async({email, password, firstName, lastName}: signUpAu
     try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        
-        await setDoc(doc(db, "users", user.uid), {
-            firstName: firstName,
-            lastName: lastName,
-            displayName: firstName,
-        })
+        if(user){
+            await setDoc(doc(db, "users", user.uid), {
+                firstName: firstName,
+                lastName: lastName,
+                displayName: firstName,
+            });
+            return !!user;
+        }
     } catch (err) {
-        // const errorCode = err?.cod;
-        // const errorMessage = err?.message;
         console.log(err);
     }
 }
 
-export const signInAuth = ({email, password}: signInAuthProps) => {
-    signInWithEmailAndPassword(auth, email, password)
-    .then((userCredential) => {
+export const signInAuth = async({email, password}: signInAuthProps) => {
+    try {
+        const userCredential = await signInWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
-        console.log(user);
+        if(user) {
+            return !!user
+        }
+    } catch (error) {
+        console.log(error);
         
-    })
-    .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        console.log(errorMessage);
-    });
+    }
 }
